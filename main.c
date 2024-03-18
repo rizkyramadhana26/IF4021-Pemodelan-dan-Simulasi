@@ -36,8 +36,6 @@
 #define INTERVAL_LOADING         5  
 #define INTERVAL_DESTINATION     6  
 
-/* Declare non-simlib global variables. */
-
 int     bus_location, total_time;
 FILE    *input, *output;
 double  mean_interval_arrival[4], unloading_min, unloading_max, loading_min, loading_max, destination_probability[3], arrival_time[4];
@@ -72,7 +70,7 @@ int main()
         }else if(next_event_type>=10)
         {
             //unload
-            unload(next_event_type-19);
+            unload(next_event_type-9);
         }else if(next_event_type>=7)
         {
             //bus departed
