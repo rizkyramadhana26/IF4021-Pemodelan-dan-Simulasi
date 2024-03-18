@@ -35,3 +35,88 @@
 #define INTERVAL_UNLOADING       4  
 #define INTERVAL_LOADING         5  
 #define INTERVAL_DESTINATION     6  
+
+/* Declare non-simlib global variables. */
+
+int     bus_location, total_time;
+FILE    *input, *output;
+double  mean_interval_arrival[4], unloading_min, unloading_max, loading_min, loading_max, destination_probability[3], arrival_time[4];
+
+void init_model(void);
+void person_is_arrived(int loc);
+void bus_is_arrived(int loc);
+void bus_is_departed(int loc);
+void unload(int loc);
+void load(int loc);
+void summary(void);
+
+int main() 
+{
+
+    input  = fopen("file.in",  "r");
+    output = fopen("file.out", "w");
+
+    //TODO: read input & determine file format
+
+    init_simlib();
+    maxatr = 4;
+    init_model();
+
+    while (sim_time < simulation_time)
+    {
+        timing();
+        if(next_event_type>=13)
+        {
+            //load
+            load(next_event_type-12);
+        }else if(next_event_type>=10)
+        {
+            //unload
+            unload(next_event_type-19);
+        }else if(next_event_type>=7)
+        {
+            //bus departed
+            bus_is_departed(next_event_type-6);
+        }else if(next_event_type>=4)
+        {
+            //bus arrived
+            bus_is_arrived(next_event_type-3);
+        }else
+        {
+            //person arrived
+            person_is_arrived(next_event_type);
+        }
+    }
+
+    summary();
+    return 0;
+}
+
+void init_model(void)
+{
+    //TODO: implement model initialization
+}
+void person_is_arrived(int loc)
+{
+    //TODO: implement person is arrived event
+}
+void bus_is_arrived(int loc)
+{
+    //TODO: implement bus arrival event
+}
+void bus_is_departed(int loc)
+{
+    //TODO: implement bus departure event
+}
+void unload(int loc)
+{
+    //TODO: implement unloading passenger event
+}
+void load(int loc)
+{
+    //TODO: implement loading passenger event
+}
+void summary(void)
+{
+    //TODO: implement generating summary
+}
