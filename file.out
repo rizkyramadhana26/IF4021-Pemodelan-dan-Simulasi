@@ -1,0 +1,117 @@
+Car-rental system using simlib
+
+Mean interarrival time at location 1      4.286 minutes
+
+Mean interarrival time at location 2      6.000 minutes
+
+Mean interarrival time at location 3      2.500 minutes
+
+Unloading time is distributed uniformly between 0.267 minutes and 0.400 minutes
+
+Loading time is distributed uniformly between 0.250 minutes and 0.417 minutes
+
+Person want to go to terminal 1 with probability 0.583
+
+Person want to go to terminal 2 with probability 0.417
+
+
+Time simulation                        4800     minutes
+
+
+(a) Average and maximum number in each queue
+
+    Queue at location 1 (1), queue at location 2 (2) and queue at location 3 (3):
+
+  File         Time
+ number       average          Maximum          Minimum
+_______________________________________________________
+
+    1         3.17994          14.0000          0.00000 
+
+    2         96.9924          174.000          1.00000 
+
+    3         934.588          1850.00          0.00000 
+_______________________________________________________
+
+
+
+(b) Average and maximum delay in each queue
+
+    Queue at location 1 (1), queue at location 2 (2) and queue at location 3 (3):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    1         13.4720          1133.00          35.0081       0.00421166 
+
+    2         615.526          616.000          1010.66          13.0634 
+
+    3        0.126049          6.00000         0.366420        0.0111534 
+________________________________________________________________________
+
+
+
+(c) Average and maximum number on the bus
+
+    Bus (4):
+
+  File         Time
+ number       average          Maximum          Minimum
+_______________________________________________________
+
+    4         13.5458          20.0000          0.00000 
+_______________________________________________________
+
+
+
+(d) Average, maximum, and minimum time the bus stopped at each location
+
+    Stop at location 1 (4), stop at location 2 (5) and stop at location 3 (6):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    4         40.5416          112.000          57.8802          33.3352 
+
+    5         33.6857          112.000          64.8802          29.8334 
+
+    6         2420.26          113.000          4785.80          13.1006 
+________________________________________________________________________
+
+
+
+(e) Average, maximum, and minimum time for the bus to make a loop for each location
+
+    Loop for location 1 (7), loop for location 2 (8) and loop for location 3 (9):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    7         42.4318          113.000          65.7797          22.1006 
+
+    8         42.5416          112.000          59.8802          35.3352 
+
+    9         42.3080          113.000          73.8802          0.00000 
+________________________________________________________________________
+
+
+
+(f) Average, maximum, and minimum time a person is in the system by arrival location
+
+    Person in system (10):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+   10         261.868          1738.00          1045.95          15.8564 
+________________________________________________________________________
+
+

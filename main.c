@@ -67,7 +67,19 @@ int main() {
     input = fopen("file.in", "r");
     output = fopen("file.out", "w");
 
-    //TODO: read input & determine file format
+    fscanf(input, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %d", &mean_interval_arrival[0], &mean_interval_arrival[1], &mean_interval_arrival[2], &unloading_min, &unloading_max, &loading_min, &loading_max, &destination_probability[0], &destination_probability[1], &total_time);
+
+    /* Write report heading and input parameters. */
+
+    fprintf(output, "Car-rental system using simlib\n\n");
+    fprintf(output, "Mean interarrival time at location 1%11.3f minutes\n\n", mean_interval_arrival[0]);
+    fprintf(output, "Mean interarrival time at location 2%11.3f minutes\n\n", mean_interval_arrival[1]);
+    fprintf(output, "Mean interarrival time at location 3%11.3f minutes\n\n", mean_interval_arrival[2]);
+    fprintf(output, "Unloading time is distributed uniformly between %5.3f minutes and %5.3f minutes\n\n", unloading_min, unloading_max);
+    fprintf(output, "Loading time is distributed uniformly between %5.3f minutes and %5.3f minutes\n\n", loading_min, loading_max);
+    fprintf(output, "Person want to go to terminal 1 with probability %5.3f\n\n", destination_probability[0]);
+    fprintf(output, "Person want to go to terminal 2 with probability %5.3f\n\n", destination_probability[1] - destination_probability[0]);
+    fprintf(output, "\nTime simulation%28d     minutes\n\n", total_time);
 
     init_simlib();
     maxatr = 4;
