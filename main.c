@@ -138,7 +138,7 @@ void init_model(void) {
 
     // Schedule People Arrivals in every location
     for (int i = 0; i < 3; i++) {
-        event_schedule(sim_time + expon(60.0 * 60.0 / 14.0, STREAM_INTERARRIVAL_1 + i), PERSON_ARRIVED_1 + i);
+        event_schedule(sim_time + expon(60.0 * mean_interval_arrival[i], STREAM_INTERARRIVAL_1 + i), PERSON_ARRIVED_1 + i);
     }
 
     // As per problem statement, the bus is initially at location 3
@@ -243,7 +243,9 @@ void bus_is_departed(int loc) {
             if (departure_time < (BUS_WAIT_TIME * 60.0)) {
                 event_schedule(bus_last_arrival + BUS_WAIT_TIME * 60.0, BUS_DEPARTED_3);
             } else {
-                sampst((sim_time - bus_last_departure_3), VARIABLE_BUS_LOOP);
+                printf("Simtime Loop Finished: %lf\n", sim_time);
+                if (sim_time >= 1200.0)
+                    sampst((sim_time - bus_last_departure_3), VARIABLE_BUS_LOOP);
                 bus_last_departure_3 = sim_time;
                 sampst(departure_time, VARIABLE_BUS_STOP_3);
                 event_schedule(sim_time + 4.5 / 30.0 * 60.0 * 60.0, BUS_ARRIVED_1);
