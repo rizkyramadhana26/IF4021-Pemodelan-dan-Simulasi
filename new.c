@@ -38,7 +38,7 @@
 #define IS_LOAD_EVENT(x) (x>=LOAD_1 && x<=LOAD_3)
 #define BUS_WAIT_TIME 5
 
-// SAMPST Storage
+// Amount tracking list
 #define PERSON_QUEUE_1 1
 #define PERSON_QUEUE_2 2
 #define PERSON_QUEUE_3 3
@@ -50,6 +50,7 @@
 #define TRANSFER_TIME_IDX 1
 #define TRANSFER_LOC_IDX 2
 
+// sampst storage
 #define VARIABLE_NQ_1 1
 #define VARIABLE_NQ_2 2
 #define VARIABLE_NQ_3 3
@@ -114,7 +115,7 @@ int main() {
     maxatr = 4;
     init_model();
 
-    while (sim_time < total_time) {
+    while (sim_time < total_time * 60) {
         timing();
         if (IS_LOAD_EVENT(next_event_type)) {
             load(next_event_type - LOAD_1 + 1);
@@ -144,7 +145,7 @@ void init_model(void) {
     event_schedule(sim_time, BUS_ARRIVED_3); 
 
     // End of simulation
-    event_schedule(sim_time + total_time, END_SIMULATION);
+    event_schedule(sim_time + total_time * 60, END_SIMULATION);
 
     sampst(0.0, 0);
     timest(0.0, 0);
@@ -159,14 +160,14 @@ void person_is_arrived(int loc) {
 
             list_file(LAST, PERSON_QUEUE_1);
             timest(list_size[PERSON_QUEUE_1], VARIABLE_NQ_1);
-            event_schedule(sim_time + expon(60.0 * 60.0 / 14.0, STREAM_INTERARRIVAL_1), PERSON_ARRIVED_1);
+            event_schedule(sim_time + expon(60.0 * mean_interval_arrival[1], STREAM_INTERARRIVAL_1), PERSON_ARRIVED_1);
             break;
         case 2:
             transfer[TRANSFER_LOC_IDX] = 3;
 
             list_file(LAST, PERSON_QUEUE_2);
             timest(list_size[PERSON_QUEUE_2], VARIABLE_NQ_2);
-            event_schedule(sim_time + expon(60.0 * 60.0 / 10.0, STREAM_INTERARRIVAL_2), PERSON_ARRIVED_2);
+            event_schedule(sim_time + expon(60.0 * mean_interval_arrival[2], STREAM_INTERARRIVAL_2), PERSON_ARRIVED_2);
             break;
         case 3:
             if (uniform(0, 1, STREAM_DESTINATION) < destination_probability[1])
@@ -176,7 +177,7 @@ void person_is_arrived(int loc) {
 
             list_file(LAST, PERSON_QUEUE_3);
             timest(list_size[PERSON_QUEUE_3], VARIABLE_NQ_3);
-            event_schedule(sim_time + expon(60.0 * 60.0 / 24.0, STREAM_INTERARRIVAL_3), PERSON_ARRIVED_3);
+            event_schedule(sim_time + expon(60.0 * mean_interval_arrival[3], STREAM_INTERARRIVAL_3), PERSON_ARRIVED_3);
             break;
         default:
             // Handle invalid loc
@@ -190,25 +191,25 @@ void bus_is_arrived(int loc) {
     switch(loc) {
         case 1:
             if (list_size[PASSENGER_BUS_1] > 0)
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_1);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_1);
             else if (list_size[PERSON_QUEUE_1] > 0 && list_bus_size() < MAX_BUS_SIZE)
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_1);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_1);
             else
                 event_schedule(sim_time + BUS_WAIT_TIME * 60.0, BUS_DEPARTED_1);
             break;
         case 2:
             if (list_size[PASSENGER_BUS_2] > 0)
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_2);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_2);
             else if (list_size[PERSON_QUEUE_2] > 0 && list_bus_size() < MAX_BUS_SIZE)
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_2);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_2);
             else
                 event_schedule(sim_time + BUS_WAIT_TIME * 60.0, BUS_DEPARTED_2);
             break;
         case 3:
             if (list_size[PASSENGER_BUS_3] > 0)
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_3);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_3);
             else if (list_size[PERSON_QUEUE_3] > 0 && list_bus_size() < MAX_BUS_SIZE)
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_3);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_3);
             else
                 event_schedule(sim_time + BUS_WAIT_TIME * 60.0, BUS_DEPARTED_3);
             break;
@@ -263,9 +264,9 @@ void unload(int loc) {
             sampst(sim_time - transfer[TRANSFER_TIME_IDX], VARIABLE_PERSON_SYSTEM_1);
 
             if (list_size[PASSENGER_BUS_1] > 0) {
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_1);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_1);
             } else if (list_size[PERSON_QUEUE_1] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_1);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_1);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_1);
             }
@@ -276,9 +277,9 @@ void unload(int loc) {
             sampst(sim_time - transfer[TRANSFER_TIME_IDX], VARIABLE_PERSON_SYSTEM_2);
 
             if (list_size[PASSENGER_BUS_2] > 0) {
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_2);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_2);
             } else if (list_size[PERSON_QUEUE_2] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_2);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_2);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_2);
             }
@@ -289,9 +290,9 @@ void unload(int loc) {
             sampst(sim_time - transfer[TRANSFER_TIME_IDX], VARIABLE_PERSON_SYSTEM_3);
 
             if (list_size[PASSENGER_BUS_3] > 0) {
-                event_schedule(sim_time + uniform(16, 24, STREAM_UNLOAD), UNLOAD_3);
+                event_schedule(sim_time + uniform(unloading_min * 60.0, unloading_max * 60.0, STREAM_UNLOAD), UNLOAD_3);
             } else if (list_size[PERSON_QUEUE_3] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_3);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_3);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_3);
             }
@@ -311,7 +312,7 @@ void load(int loc) {
             list_file(LAST, PASSENGER_BUS_3);
             timest(list_bus_size(), VARIABLE_N_PASSENGER_BUS);
             if (list_size[PERSON_QUEUE_1] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_1);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_1);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_1);
             }
@@ -323,7 +324,7 @@ void load(int loc) {
             list_file(LAST, PASSENGER_BUS_3);
             timest(list_bus_size(), VARIABLE_N_PASSENGER_BUS);
             if (list_size[PERSON_QUEUE_2] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_2);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_2);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_2);
             }
@@ -339,7 +340,7 @@ void load(int loc) {
             }
             timest(list_bus_size(), VARIABLE_N_PASSENGER_BUS);
             if (list_size[PERSON_QUEUE_3] > 0 && list_bus_size() < MAX_BUS_SIZE) {
-                event_schedule(sim_time + uniform(15, 25, STREAM_LOAD), LOAD_3);
+                event_schedule(sim_time + uniform(loading_min * 60.0, loading_max * 60.0, STREAM_LOAD), LOAD_3);
             } else {
                 event_schedule(sim_time, BUS_DEPARTED_3);
             }

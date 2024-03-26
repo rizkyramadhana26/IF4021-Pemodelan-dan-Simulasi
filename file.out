@@ -19,54 +19,54 @@ Time simulation                        4800     minutes
 
 (a) Average and maximum number in each queue 
      1. Terminal 1:
-       -Average: 6.801
-       -Maximum: 16.000
+       -Average: 7.544
+       -Maximum: 26.000
      2. Terminal 2:
-       -Average: 2.881
-       -Maximum: 7.000
+       -Average: 4.985
+       -Maximum: 18.000
      3. Car Rental:
-       -Average: 10.953
-       -Maximum: 21.000
+       -Average: 10.065
+       -Maximum: 31.000
 (b) Average and maximum delay in each queue 
      1. Terminal 1:
-       -Average: 1304.732
-       -Maximum: 2406.888
+       -Average: 1927.987
+       -Maximum: 5654.247
      2. Terminal 2:
-       -Average: 1088.522
-       -Maximum: 2145.260
+       -Average: 1822.826
+       -Maximum: 7124.011
      3. Car Rental:
-       -Average: 1188.184
-       -Maximum: 2147.686
+       -Average: 1563.432
+       -Maximum: 4186.248
 (c) Average and maximum number on the bus 
-     -Average: 10.197
+     -Average: 13.894
      -Maximum: 20.000
 (d) Average, maximum, and minimum time bus stopped at each location 
      1. Terminal 1:
-       -Average: 337.788
-       -Maximum: 375.576
+       -Average: 407.237
+       -Maximum: 630.712
        -Minimum: 300.000
      2. Terminal 2:
-       -Average: 322.554
-       -Maximum: 345.108
+       -Average: 327.328
+       -Maximum: 592.650
        -Minimum: 300.000
      3. Car Rental:
-       -Average: 431.901
-       -Maximum: 563.802
+       -Average: 682.408
+       -Maximum: 847.236
        -Minimum: 300.000
 (e) Average, maximum, and minimum time bus making a loop 
-     -Average: 1331.901
-     -Maximum: 2363.802
+     -Average: 2598.669
+     -Maximum: 2922.411
      -Minimum: 300.000
 (f) Average, maximum, and minimum time person in the system 
      1. Terminal 1:
-      -Average: 2365.846
-     -Maximum: 3087.613
-     -Minimum: 1353.639
+      -Average: 2389.428
+     -Maximum: 5120.404
+     -Minimum: 685.788
      2. Terminal 2:
-       -Average: 2174.997
-       -Maximum: 3258.583
-       -Minimum: 1791.339
+       -Average: 2883.658
+       -Maximum: 5272.909
+       -Minimum: 1069.636
      3. Car Rental:
-       -Average: 2251.323
-       -Maximum: 3605.994
-       -Minimum: 995.171
+       -Average: 2981.864
+       -Maximum: 8089.310
+       -Minimum: 857.459
