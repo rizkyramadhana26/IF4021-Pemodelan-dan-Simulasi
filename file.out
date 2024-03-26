@@ -1,18 +1,18 @@
 Car-rental system using simlib
 
-Mean interarrival time at location 1      0.000 minutes
+Mean interarrival time at location 1      4.286 minutes
 
-Mean interarrival time at location 2      4.286 minutes
+Mean interarrival time at location 2      6.000 minutes
 
-Mean interarrival time at location 3      6.000 minutes
+Mean interarrival time at location 3      2.500 minutes
 
 Unloading time is distributed uniformly between 0.267 minutes and 0.400 minutes
 
 Loading time is distributed uniformly between 0.250 minutes and 0.417 minutes
 
-Person want to go to terminal 1 with probability 0.000
+Person want to go to terminal 1 with probability 0.583
 
-Person want to go to terminal 2 with probability 0.583
+Person want to go to terminal 2 with probability 0.417
 
 
 Time simulation                        4800     minutes
