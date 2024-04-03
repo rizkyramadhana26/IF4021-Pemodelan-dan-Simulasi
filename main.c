@@ -30,20 +30,20 @@
 #define QUEUE_3                  3   
 #define SERVER                   4  //bus
 
-//daftar variabel timest
-#define TIMEST_DELAYS_1          1  //untuk menghitung lama waktu antrean
-#define TIMEST_DELAYS_2          2  
-#define TIMEST_DELAYS_3          3  
-#define TIMEST_SERVER_1          4  //untuk menghitung durasi bus berhenti
-#define TIMEST_SERVER_2          5  
-#define TIMEST_SERVER_3          6  
-#define TIMEST_LOOP_1            7  //untuk menghitung durasi loop
-#define TIMEST_LOOP_2            8  
-#define TIMEST_LOOP_3            9
+//daftar variabel sampst
+#define sampst_DELAYS_1          1  //untuk menghitung lama waktu antrean
+#define sampst_DELAYS_2          2  
+#define sampst_DELAYS_3          3  
+#define sampst_SERVER_1          4  //untuk menghitung durasi bus berhenti
+#define sampst_SERVER_2          5  
+#define sampst_SERVER_3          6  
+#define sampst_LOOP_1            7  //untuk menghitung durasi loop
+#define sampst_LOOP_2            8  
+#define sampst_LOOP_3            9
 
-#define TIMEST_PERSON_1          10 //untuk menghitung total durasi di sistem, dikelompokkan berdasar lokasi tujuan
-#define TIMEST_PERSON_2          11
-#define TIMEST_PERSON_3          12
+#define sampst_PERSON_1          10 //untuk menghitung total durasi di sistem, dikelompokkan berdasar lokasi tujuan
+#define sampst_PERSON_2          11
+#define sampst_PERSON_3          12
 
 //daftar stream
 #define STREAM_INTER_ARRIVAL_1       1  
@@ -143,7 +143,7 @@ void person_is_arrived(int loc) {
     list_file(LAST, QUEUE_1 + loc - 1);
     printf("ORANG DATANG DI LOC: %d SIMTIME: %lf JUMLAH ANTREAN: %d\n", loc, sim_time, list_size[QUEUE_1+loc-1]);
     filest(QUEUE_1 + loc -1);
-    if((loc==bus_location) && (list_size[QUEUE_1 + loc-1]==0)){
+    if((loc==bus_location) && (list_size[QUEUE_1 + loc-1]==1)){
         event_cancel(BUS_DEPARTED_1+loc-1);
         event_schedule(sim_time, LOAD_1 + loc - 1);
     }
@@ -153,7 +153,7 @@ void bus_is_arrived(int loc) {
     bus_location = loc;
     // ARRIVAL TIME BIS SEBELUMNYA, INI UNTUK MENJAWAB SOAL E
     if(sim_time>=35){
-        timest(sim_time - arrival_time[loc - 1], TIMEST_LOOP_1 + loc - 1); // UNTUK MENGHITUNG DURASI LOOP< TAPI NANTI PAKE YG 3 AJA
+        sampst(sim_time - arrival_time[loc - 1], sampst_LOOP_1 + loc - 1); // UNTUK MENGHITUNG DURASI LOOP< TAPI NANTI PAKE YG 3 AJA
     }
     // NIH ARRIVAL TIME NYA DITIMPANYA DISINI
     arrival_time[loc - 1] = sim_time;
@@ -167,7 +167,7 @@ void bus_is_departed(int loc) {
     bus_location = 0;
     // ARRIVAL TIME NYA BUS YANG INI
     if(sim_time != 0){
-        timest(sim_time - arrival_time[loc - 1], TIMEST_SERVER_1 + loc - 1); //ini buat jawab yang D, menghitung durasi bus berhenti
+        sampst(sim_time - arrival_time[loc - 1], sampst_SERVER_1 + loc - 1); //ini buat jawab yang D, menghitung durasi bus berhenti
     }
     /* Schedule bus arrival at next location. */
     if (loc == 1) {
@@ -191,7 +191,7 @@ void unload(int loc) {
                 //kalo tujuan di sini, gaperlu list_file
                 double duration = uniform(unloading_min, unloading_max, STREAM_UNLOADING);
                 total_duration += duration;
-                timest(sim_time + total_duration - transfer[TIME_IDX], TIMEST_PERSON_1+loc-1); //untuk menjawab soal f
+                sampst(sim_time + total_duration - transfer[TIME_IDX], sampst_PERSON_1+loc-1); //untuk menjawab soal f
                 filest(SERVER);
                 printf("ADA YANG TURUN DI %d. ISI BUS: %d\n",loc, list_size[SERVER]);
             }else{
@@ -219,7 +219,7 @@ void load(int loc) {
         
         // update lama waktu orang di antrian
         list_remove(FIRST, QUEUE_1 + loc -1);
-        timest(sim_time + total_duration - transfer[TIME_IDX], TIMEST_DELAYS_1+loc-1);
+        sampst(sim_time + total_duration - transfer[TIME_IDX], sampst_DELAYS_1+loc-1);
         list_file(LAST, SERVER);
 
         // Update panjang antrian
@@ -230,6 +230,7 @@ void load(int loc) {
     }
     printf("TOTAL DURASI LOAD DI %d: %lf\n",loc, total_duration);
     double duration_to_departure = 0 >= 5-(sim_time + total_duration - arrival_time[loc-1]) ? 0 : 5-(sim_time + total_duration - arrival_time[loc-1]);
+    event_cancel(BUS_DEPARTED_1+loc-1);
     event_schedule(sim_time+total_duration+duration_to_departure, BUS_DEPARTED_1 + loc -1);
 }
 void summary(void) {
@@ -239,16 +240,16 @@ void summary(void) {
     out_filest(output, QUEUE_1, QUEUE_3);
     fprintf(output, "\n(b) Average and maximum delay in each queue\n");
     fprintf(output, "\n    Queue at location 1 (1), queue at location 2 (2) and queue at location 3 (3):\n");
-    out_timest(output, TIMEST_DELAYS_1, TIMEST_DELAYS_3);
+    out_sampst(output, sampst_DELAYS_1, sampst_DELAYS_3);
     fprintf(output, "\n(c) Average and maximum number on the bus\n");
     fprintf(output, "\n    Bus (4):\n");
     out_filest(output, SERVER, SERVER);
     fprintf(output, "\n(d) Average, maximum, and minimum time the bus stopped at each location\n");
     fprintf(output, "\n    Stop at location 1 (4), stop at location 2 (5) and stop at location 3 (6):\n");
-    out_timest(output, TIMEST_SERVER_1, TIMEST_SERVER_3);
+    out_sampst(output, sampst_SERVER_1, sampst_SERVER_3);
     fprintf(output, "\n(e) Average, maximum, and minimum time for the bus to make a loop for each location\n");                                                            fprintf(output, "\n Loop for location 1 (7), loop for location 2 (8) and loop for location 3 (9):\n");
-    out_timest(output, TIMEST_LOOP_3, TIMEST_LOOP_3);
+    out_sampst(output, sampst_LOOP_3, sampst_LOOP_3);
     fprintf(output, "\n(f) Average, maximum, and minimum time a person is in the system by arrival location\n");
     fprintf(output, "\n    Person in location 1 (10), Person in location 2 (11), Person in location 3 (12):\n");
-    out_timest(output, TIMEST_PERSON_1, TIMEST_PERSON_3);
+    out_sampst(output, sampst_PERSON_1, sampst_PERSON_3);
 }
