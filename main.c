@@ -53,6 +53,7 @@
 #define STREAM_LOADING         5  
 #define STREAM_DESTINATION     6
 
+// Event logic gate
 #define IS_PERSON_ARRIVED_EVENT(x) (x>=PERSON_ARRIVED_1 && x<=PERSON_ARRIVED_3)
 #define IS_BUS_ARRIVED_EVENT(x) (x>=BUS_ARRIVED_1 && x<=BUS_ARRIVED_3)
 #define IS_BUS_DEPARTED_EVENT(x) (x>=BUS_DEPARTED_1 && x<=BUS_DEPARTED_3)
@@ -64,6 +65,7 @@ int     bus_location, total_time;
 FILE* input, * output;
 double  mean_interval_arrival[3], unloading_min, unloading_max, loading_min, loading_max, destination_probability[2], arrival_time[3], departure_time[3];
 
+
 void init_model(void);
 void person_is_arrived(int loc);
 void bus_is_arrived(int loc);
@@ -72,29 +74,36 @@ void unload(int loc);
 void load(int loc);
 void summary(void);
 
-int main() {
+int list_bus_size() {return list_size[PASSENGER_BUS_1] + list_size[PASSENGER_BUS_2] + list_size[PASSENGER_BUS_3]; }
 
+int main() {
     input = fopen("file.in", "r");
     output = fopen("file.out", "w");
 
-    fscanf(input, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %d", &mean_interval_arrival[0], &mean_interval_arrival[1], &mean_interval_arrival[2], &unloading_min, &unloading_max, &loading_min, &loading_max, &destination_probability[0], &destination_probability[1], &total_time);
+    fscanf(input, "%lf %lf %lf %lf %lf %lf %lf %lf %lf %d", 
+            &mean_interval_arrival[1], &mean_interval_arrival[2], &mean_interval_arrival[3], 
+            &unloading_min, &unloading_max,
+            &loading_min, &loading_max, 
+            &destination_probability[1], &destination_probability[2], 
+            &total_time
+        );
 
     /* Write report heading and input parameters. */
     fprintf(output, "Car-rental system using simlib\n\n");
-    fprintf(output, "Mean interarrival time at location 1%11.3f minutes\n\n", mean_interval_arrival[0]);
-    fprintf(output, "Mean interarrival time at location 2%11.3f minutes\n\n", mean_interval_arrival[1]);
-    fprintf(output, "Mean interarrival time at location 3%11.3f minutes\n\n", mean_interval_arrival[2]);
+    fprintf(output, "Mean interarrival time at location 1%11.3f minutes\n\n", mean_interval_arrival[1]);
+    fprintf(output, "Mean interarrival time at location 2%11.3f minutes\n\n", mean_interval_arrival[2]);
+    fprintf(output, "Mean interarrival time at location 3%11.3f minutes\n\n", mean_interval_arrival[3]);
     fprintf(output, "Unloading time is distributed uniformly between %5.3f minutes and %5.3f minutes\n\n", unloading_min, unloading_max);
     fprintf(output, "Loading time is distributed uniformly between %5.3f minutes and %5.3f minutes\n\n", loading_min, loading_max);
-    fprintf(output, "Person want to go to terminal 1 with probability %5.3f\n\n", destination_probability[0]);
-    fprintf(output, "Person want to go to terminal 2 with probability %5.3f\n\n", destination_probability[1] - destination_probability[0]);
+    fprintf(output, "Person want to go to terminal 1 with probability %5.3f\n\n", destination_probability[1]);
+    fprintf(output, "Person want to go to terminal 2 with probability %5.3f\n\n", destination_probability[2] - destination_probability[1]);
     fprintf(output, "\nTime simulation%28d     minutes\n\n", total_time);
 
     init_simlib();
     maxatr = 4;
     init_model();
 
-    while (sim_time < total_time) {
+    while (sim_time < total_time * 60) {
         timing();
         if (IS_LOAD_EVENT(next_event_type)) {
             load(next_event_type - LOAD_1 + 1);
@@ -118,13 +127,14 @@ void init_model(void) {
     // for each location schedule the first people arrivals 
     // with random time_difference utilizing mean_interval_arrival
     for (int i = 0; i < 3; i++) {
-        event_schedule(sim_time + expon(mean_interval_arrival[i], STREAM_INTER_ARRIVAL_1+ i), PERSON_ARRIVED_1 + i);
+        event_schedule(sim_time + expon(60.0 * mean_interval_arrival[i], STREAM_INTERARRIVAL_1 + i), PERSON_ARRIVED_1 + i);
     }
     bus_location = 0;
     arrival_time[2] = 0;
     // As per problem statement, the bus is initially at location 3
     event_schedule(sim_time, BUS_DEPARTED_3);
 }
+
 void person_is_arrived(int loc) {
     // schedule the next person arrival with random time_difference utilizing mean_interval_arrival
     event_schedule(sim_time + expon(mean_interval_arrival[loc - 1], STREAM_INTER_ARRIVAL_1+ loc - 1), PERSON_ARRIVED_1 + loc - 1);
@@ -161,6 +171,7 @@ void bus_is_arrived(int loc) {
     // schedule unloading event
     event_schedule(sim_time, UNLOAD_1 + loc - 1);
 }
+
 void bus_is_departed(int loc) {
     printf("BUS BERANGKAT DI LOC: %d SIMTIME: %lf\n", loc, sim_time);
     /* Unset bus location and register server delay. */
@@ -178,6 +189,8 @@ void bus_is_departed(int loc) {
         event_schedule(sim_time + 9, BUS_ARRIVED_1);
     }
 }
+
+
 void unload(int loc) {
     printf("UNLOAD DI LOC: %d SIMTIME: %lf\n", loc, sim_time);
     /* Check to see whether bus is not empty. */
@@ -208,6 +221,7 @@ void unload(int loc) {
         event_schedule(sim_time, LOAD_1 + loc - 1);
     }
 }
+
 void load(int loc) {
     printf("LOAD DI LOC: %d SIMTIME: %lf\n", loc, sim_time);
     double total_duration = 0.0;
@@ -233,6 +247,7 @@ void load(int loc) {
     event_cancel(BUS_DEPARTED_1+loc-1);
     event_schedule(sim_time+total_duration+duration_to_departure, BUS_DEPARTED_1 + loc -1);
 }
+
 void summary(void) {
     /* Get and write out estimates of desired measures of performance. */
     fprintf(output, "\n(a) Average and maximum number in each queue\n");
