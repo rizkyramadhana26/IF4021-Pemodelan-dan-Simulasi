@@ -17,56 +17,100 @@ Person want to go to terminal 2 with probability 0.417
 
 Time simulation                        4800     minutes
 
-(a) Average and maximum number in each queue 
-     1. Terminal 1:
-       -Average: 7.955
-       -Maximum: 28.000
-     2. Terminal 2:
-       -Average: 5.070
-       -Maximum: 18.000
-     3. Car Rental:
-       -Average: 9.974
-       -Maximum: 32.000
-(b) Average and maximum delay in each queue 
-     1. Terminal 1:
-       -Average: 2030.458
-       -Maximum: 5887.295
-     2. Terminal 2:
-       -Average: 1854.168
-       -Maximum: 8371.863
-     3. Car Rental:
-       -Average: 1549.652
-       -Maximum: 4141.842
-(c) Average and maximum number on the bus 
-     -Average: 13.895
-     -Maximum: 20.000
-(d) Average, maximum, and minimum time bus stopped at each location 
-     1. Terminal 1:
-       -Average: 407.574
-       -Maximum: 630.712
-       -Minimum: 300.000
-     2. Terminal 2:
-       -Average: 327.122
-       -Maximum: 592.650
-       -Minimum: 300.000
-     3. Car Rental:
-       -Average: 682.549
-       -Maximum: 855.639
-       -Minimum: 300.000
-(e) Average, maximum, and minimum time bus making a loop 
-     -Average: 2619.959
-     -Maximum: 2922.411
-     -Minimum: 2133.922
-(f) Average, maximum, and minimum time person in the system 
-     1. Terminal 1:
-      -Average: 2358.468
-     -Maximum: 5046.884
-     -Minimum: 689.359
-     2. Terminal 2:
-       -Average: 2891.704
-       -Maximum: 5618.079
-       -Minimum: 1058.142
-     3. Car Rental:
-       -Average: 3055.934
-       -Maximum: 9315.638
-       -Minimum: 843.419
+
+
+(a) Average and maximum number in each queue
+
+    Queue at location 1 (1), queue at location 2 (2) and queue at location 3 (3):
+
+  File         Time
+ number       average          Maximum          Minimum
+_______________________________________________________
+
+    1         4.44531          19.0000          0.00000 
+
+    2         3.04137          14.0000          0.00000 
+
+    3         7.12052          28.0000          0.00000 
+_______________________________________________________
+
+
+
+(b) Average and maximum delay in each queue
+
+    Queue at location 1 (1), queue at location 2 (2) and queue at location 3 (3):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    1         20.5985          1126.00          65.6489         0.251309 
+
+    2         19.7811          788.000          74.8388         0.251950 
+
+    3         21.0098          1847.00          61.6143         0.250491 
+________________________________________________________________________
+
+
+
+(c) Average and maximum number on the bus
+
+    Bus (4):
+
+  File         Time
+ number       average          Maximum          Minimum
+_______________________________________________________
+
+    4         12.2479          20.0000          0.00000 
+_______________________________________________________
+
+
+
+(d) Average, maximum, and minimum time the bus stopped at each location
+
+    Stop at location 1 (4), stop at location 2 (5) and stop at location 3 (6):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    4         5.73584          124.000          9.19048          5.00000 
+
+    5         5.15530          124.000          8.47851          5.00000 
+
+    6         7.88768          123.000          14.3096          5.00000 
+________________________________________________________________________
+
+
+
+(e) Average, maximum, and minimum time for the bus to make a loop for each location
+
+ Loop for location 1 (7), loop for location 2 (8) and loop for location 3 (9):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+    9         38.7911          122.000          46.9288          35.0000 
+________________________________________________________________________
+
+
+
+(f) Average, maximum, and minimum time a person is in the system by arrival location
+
+    Person in location 1 (10), Person in location 2 (11), Person in location 3 (12):
+
+ sampst                         Number
+variable                          of
+ number       Average           values          Maximum          Minimum
+________________________________________________________________________
+
+   10         32.0908          1049.00          77.2461          10.2337 
+
+   11         39.1379          798.000          82.0656          17.3507 
+
+   12         37.8292          1899.00          90.5661          11.5569 
+________________________________________________________________________
